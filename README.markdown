@@ -10,7 +10,7 @@ capn is a package that provides hooks when the current-working-directory changes
 
 ### Configuration
 
-capn uses a simple YAML file for specifying paths and their hook. As a quick example, consider the following:
+capn uses a simple YAML file for specifying paths and their hooks. As a quick example, consider the following:
 
 
      settings:
