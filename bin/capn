@@ -19,3 +19,11 @@ __docapn() {
     eval "$(__capn exit "$old" "$PWD")"
     eval "$(__capn enter "$old" "$PWD")"
 }
+
+unhook() {
+    unset cd
+    unset pushd
+    unset popd
+    unset __docapn
+    unset unhook
+}
