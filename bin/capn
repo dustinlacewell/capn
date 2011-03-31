@@ -1,0 +1,21 @@
+#!/bin/sh
+
+cd() {
+    __docapn "$FUNCNAME" "$@"
+}
+
+pushd() {
+    __docapn "$FUNCNAME" "$@"
+}
+
+popd() {
+    __docapn "$FUNCNAME" "$@"
+}
+
+__docapn() {
+    local old=$PWD
+    # call the original builtin with original arguments
+    builtin "$1" "${@:2}"
+    eval "$(__capn exit "$old" "$PWD")"
+    eval "$(__capn enter "$old" "$PWD")"
+}

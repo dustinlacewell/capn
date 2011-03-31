@@ -1,0 +1,118 @@
+#!/usr/bin/env python
+
+import os, sys
+from os import path
+
+from yaml import load, dump
+try:
+    from yaml import CLoader as Loader
+    from yaml import CDumper as Dumper
+except ImportError:
+    from yaml import Loader, Dumper
+
+CONFIG_NAME = ".capnhooks"
+DEFAULT_TYPE = 'path'
+DEFAULT_CONFIG = {'default_type': DEFAULT_TYPE}
+
+def fix(path):
+    if path:
+        return os.path.normpath(os.path.expanduser(path))
+
+def get_config():
+    config = load(open(fix(path.join("~", CONFIG_NAME)), 'r+'), Loader=Loader)
+    newconfig = {}
+    for pathname in config:
+        newconfig[fix(pathname)] = config[pathname]
+    return newconfig
+        
+
+config = get_config()
+# determine the default type
+default_type = config['settings'].get('default_type', DEFAULT_TYPE)
+
+def get_all_paths():
+    return [path for path in config if not path == 'settings']
+
+def path_in_path(parent, child):
+    '''
+    Example:
+       parent - ~/projects
+       child  - ~/projects/myproject/foo
+    Would return True
+    '''
+    parent = parent
+    child = child
+    prefix = path.commonprefix([parent, child])
+    return parent == prefix
+
+def get_parents(child):
+    parents = []
+    # for all hooked paths
+    for path in get_all_paths():
+        # get path's type or default
+        pathtype = config[path].get('type', default_type)
+        # append parent if type is tree
+        if pathtype == 'tree' and path_in_path(path, child):
+            parents.append(path)
+    parents.sort()
+    return parents
+
+def handle_exit_cwd(old):
+    settings = config.get(old, None)
+    if settings:
+        pathtype = settings.get('type', default_type)
+        if pathtype == 'path':
+            command = settings.get('exit', None)
+            if command:
+                command = command.format(old=old)
+                print command
+
+def handle_exit(old, new):
+    # handle old path first
+    handle_exit_cwd(old)
+    # handle parents bottom-up
+    parents = get_parents(old)
+    parents.reverse()
+    for path in parents:
+        settings = config[path]
+        command = settings.get('exit', None)
+        if command and not path_in_path(path, new):
+            command = command.format(old=old)
+            print command
+
+def handle_enter_cwd(old, new):
+    settings = config.get(new, None)
+    if settings:
+        pathtype = settings.get('type', default_type)
+        if pathtype == 'path':
+            command = settings.get('enter', None)
+            if command:
+                command = command.format(old=old, new=new)
+                print command
+
+def handle_enter(old, new):
+    # handle parents top-down
+    parents = get_parents(new)
+    for path in parents:
+        settings = config[path]
+        command = settings.get('enter', None)
+        if command and not path_in_path(path, old):
+            command = command.format(old=old, new=new)
+            print command
+    # handle new path last
+    handle_enter_cwd(old, new)
+
+
+def call_handler():
+    if len(sys.argv) != 4:
+        return
+    direction, old, new = sys.argv[1:4]
+    if direction == 'exit':
+        handle_exit(fix(old), fix(new))
+    elif direction == 'enter':
+        handle_enter(fix(old), fix(new))
+    
+
+if "__main__" == __name__:
+    call_handler()
+    
