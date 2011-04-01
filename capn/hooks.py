@@ -15,8 +15,8 @@ def handle_exit_cwd(old):
     for hook in hooks:
         pathtype = hook.get('type', default_type)
         if pathtype == 'path':
-            command = hook.get('exit', None)
-            if command:
+            commands = hook.get('exit', [])
+            for command in commands:
                 command = command.format(old=old)
                 print command
 
@@ -28,18 +28,19 @@ def handle_exit(old, new):
     parents.reverse()
     for hook in parents:
         path = hook['path']
-        command = hook.get('exit', None)
-        if command and not path_in_path(path, new):
-            command = command.format(old=old)
-            print command
+        commands = hook.get('exit', [])
+        if not path_in_path(path, new):
+            for command in commands:
+                command = command.format(old=old)
+                print command
 
 def handle_enter_cwd(old, new):
     hooks = hooks_for_path(new)
     for hook in hooks:
         pathtype = hook.get('type', default_type)
         if pathtype == 'path':
-            command = hook.get('enter', None)
-            if command:
+            commands = hook.get('enter', [])
+            for command in commands:
                 command = command.format(old=old, new=new)
                 print command
 
@@ -48,10 +49,11 @@ def handle_enter(old, new):
     parents = get_parents(new)
     for hook in parents:
         path = hook['path']
-        command = hook.get('enter', None)
-        if command and not path_in_path(path, old):
-            command = command.format(old=old, new=new)
-            print command
+        commands = hook.get('enter', [])
+        if not path_in_path(path, old):
+            for command in commands:
+                command = command.format(old=old, new=new)
+                print command
     # handle new path last
     handle_enter_cwd(old, new)
 
