@@ -39,12 +39,15 @@ def get_configuration():
     return config
 
 def add_external_hook(filename, path, hooktype=DEFAULT_TYPE, 
-                      enter=None, exit=None):
+                      enter=[], exit=[]):
     '''
     Will add an external hook to the YAML specfified
     YAML file.
     '''
-    config = load_yaml(filename)
+    if os.path.isfile(filename):
+        config = load_yaml(filename)
+    else:
+        config = {'hooks': []}
     hook = {'path': path, 'type': hooktype}
     if enter:
         hook['enter'] = enter
