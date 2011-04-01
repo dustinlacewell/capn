@@ -5,6 +5,7 @@ capn is a package that provides hooks when the current-working-directory changes
 
 ### Installation
 
+    $ sudo pip install python-yaml
     $ sudo python setup.py install
     $ touch ~/.capnhooks
 
