@@ -50,7 +50,7 @@ def add_external_hook(filename, path, hooktype=DEFAULT_TYPE,
     else:
         config = {'hooks': []}
     if unique:
-        for hook in config:
+        for hook in config['hooks']:
             if hook['path'] == path:
                 config.remove(hook)
     hook = {'path': path, 'type': hooktype}
