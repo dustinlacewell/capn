@@ -35,7 +35,7 @@ def get_configuration():
     config.update(load_yaml(os.path.join("~", CONFIG_NAME)))
     external_configs = config['settings'].get('external_hooks', [])
     for conf in external_configs:
-        if os.path.isfile(conf):
+        if os.path.isfile(expand(conf)):
             config['hooks'].extend(load_yaml(conf)['hooks'])
     return config
 
