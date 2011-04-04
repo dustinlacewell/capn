@@ -40,7 +40,7 @@ def get_configuration():
     return config
 
 def add_external_hook(filename, path, hooktype=DEFAULT_TYPE, 
-                      enter=[], exit=[]):
+                      enter=[], exit=[], unique=False):
     '''
     Will add an external hook to the YAML specfified
     YAML file.
@@ -49,6 +49,10 @@ def add_external_hook(filename, path, hooktype=DEFAULT_TYPE,
         config = load_yaml(filename)
     else:
         config = {'hooks': []}
+    if unique:
+        for hook in config:
+            if hook['path'] == path:
+                config.remove(hook)
     hook = {'path': path, 'type': hooktype}
     if enter:
         hook['enter'] = enter
