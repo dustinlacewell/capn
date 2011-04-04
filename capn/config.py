@@ -44,7 +44,7 @@ def add_external_hook(filename, path, hooktype=DEFAULT_TYPE,
     Will add an external hook to the YAML specfified
     YAML file.
     '''
-    if os.path.isfile(filename):
+    if os.path.isfile(expand(filename)):
         config = load_yaml(filename)
     else:
         config = {'hooks': []}
