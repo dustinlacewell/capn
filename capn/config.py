@@ -52,7 +52,7 @@ def add_external_hook(filename, path, hooktype=DEFAULT_TYPE,
     if unique:
         for hook in config['hooks']:
             if hook['path'] == path:
-                config.remove(hook)
+                config['hooks'].remove(hook)
     hook = {'path': path, 'type': hooktype}
     if enter:
         hook['enter'] = enter
