@@ -35,7 +35,8 @@ def get_configuration():
     config.update(load_yaml(os.path.join("~", CONFIG_NAME)))
     external_configs = config['settings'].get('external_hooks', [])
     for conf in external_configs:
-        config['hooks'].extend(load_yaml(conf)['hooks'])
+        if os.path.isfile(conf):
+            config['hooks'].extend(load_yaml(conf)['hooks'])
     return config
 
 def add_external_hook(filename, path, hooktype=DEFAULT_TYPE, 
