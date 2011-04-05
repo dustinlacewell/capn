@@ -1,3 +1,4 @@
 include setup.py
 include README.markdown
+include requirements.txt
 recursive-include bin/ *
