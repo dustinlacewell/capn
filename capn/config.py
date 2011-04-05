@@ -70,7 +70,7 @@ def remove_external_hook(filename, path):
     '''
     if os.path.isfile(expand(filename)):
         config = load_yaml(filename)
-        config['hooks'] = [h for h in config['hooks'] if h.path != path]
+        config['hooks'] = [h for h in config['hooks'] if h['path'] != path]
         save_yaml(filename, config)
         
         
