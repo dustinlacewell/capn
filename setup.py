@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='capn',
-    version='1.0.6',
+    version='1.0',
     packages=['capn',],
     scripts=['bin/capn', 'bin/__capn'],
     author="Dustin Lacewell",
