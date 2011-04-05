@@ -50,9 +50,12 @@ def add_external_hook(filename, path, hooktype=DEFAULT_TYPE,
     else:
         config = {'hooks': []}
     if unique:
+        removed = []
         for hook in config['hooks']:
             if hook['path'] == path:
-                config['hooks'].remove(hook)
+                removed.append(hook)
+        for hook in removed:
+            config['hooks'].remove(hook)
     hook = {'path': path, 'type': hooktype}
     if enter:
         hook['enter'] = enter
@@ -60,6 +63,17 @@ def add_external_hook(filename, path, hooktype=DEFAULT_TYPE,
         hook['exit'] = exit
     config['hooks'].append(hook)
     save_yaml(filename, config)
+
+def remove_external_hook(filename, path):
+    '''
+    Removes all hooks for a given path.
+    '''
+    if os.path.isfile(expand(filename)):
+        config = load_yaml(filename)
+        config['hooks'] = [h for h in config['hooks'] if h.path != path]
+        save_yaml(filename, config)
+        
+        
         
 
         
