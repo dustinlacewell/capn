@@ -1,10 +1,8 @@
 from distutils.core import setup
 
-from ark import VERSION
-
 setup(
     name='capn',
-    version=VERSION,
+    version='1.0'
     packages=['capn',],
     scripts=['bin/capn', 'bin/__capn'],
     license='Creative Commons Attribution-Noncommercial-Share Alike license',
