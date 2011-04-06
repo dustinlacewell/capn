@@ -1,11 +1,11 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name='capn',
-    version='1.0.1',
+    version='1.0.2',
     packages=['capn',],
     scripts=['bin/capn', 'bin/__capn'],
-    requires=['PyYAML'],
+    install_requires=['PyYAML'],
     provides=['capn'],
     author="Dustin Lacewell",
     author_email="dlacewell@gmail.com",
