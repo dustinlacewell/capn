@@ -1,1 +1,1 @@
-PyYAML=3.09
+PyYAML>=3.09
