@@ -32,11 +32,13 @@ def save_yaml(path, config):
 
 def get_configuration():
     config = DEFAULT_CONFIG
-    config.update(load_yaml(os.path.join("~", CONFIG_NAME)))
-    external_configs = config['settings'].get('external_hooks', [])
-    for conf in external_configs:
-        if os.path.isfile(expand(conf)):
-            config['hooks'].extend(load_yaml(conf)['hooks'])
+    configpath = os.path.join("~", CONFIG_NAME)
+    if os.path.isfile(configpath):
+        config.update(load_yaml(os.path.join("~", CONFIG_NAME)))
+        external_configs = config['settings'].get('external_hooks', [])
+        for conf in external_configs:
+            if os.path.isfile(expand(conf)):
+                config['hooks'].extend(load_yaml(conf)['hooks'])
     return config
 
 def add_external_hook(filename, path, hooktype=DEFAULT_TYPE, 
