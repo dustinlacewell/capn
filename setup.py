@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='capn',
-    version='1.0.4',
+    version='1.0rc1',
     packages=['capn',],
     scripts=['bin/capn', 'bin/__capn'],
     install_requires=['PyYAML'],
