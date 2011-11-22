@@ -14,8 +14,9 @@ DEFAULT_TYPE = 'path'
 DEFAULT_CONFIG = {'settings':{'default_type': DEFAULT_TYPE}, 'hooks':[]}
 
 def expand_config(config):
-    for hook in config['hooks']:
-        hook['path'] = expand(hook['path'])
+    if config['hooks']:
+        for hook in config['hooks']:
+            hook['path'] = expand(hook['path'])
     return config
 
 def load_yaml(path):
@@ -38,7 +39,9 @@ def get_configuration():
         external_configs = config['settings'].get('external_hooks', [])
         for conf in external_configs:
             if os.path.isfile(expand(conf)):
-                config['hooks'].extend(load_yaml(conf)['hooks'])
+                newhooks = load_yaml(conf)['hooks']
+                if newhooks:
+                    config['hooks'].extend(newhooks)
     return config
 
 def add_external_hook(filename, path, hooktype=DEFAULT_TYPE, 
@@ -49,9 +52,11 @@ def add_external_hook(filename, path, hooktype=DEFAULT_TYPE,
     '''
     if os.path.isfile(expand(filename)):
         config = load_yaml(filename)
+        if 'hooks' not in config:
+            config['hooks'] = []
     else:
-        config = {'hooks': []}
-    if unique:
+            config = {'hooks': []}
+    if unique and config['hooks']:
         removed = []
         for hook in config['hooks']:
             if hook['path'] == path:
